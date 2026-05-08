@@ -219,44 +219,36 @@ export default function SettingsGrid({ flow, settings, onChange, onPreset }: Set
         {flow === 3 && (
           <>
             <div style={sgStyle}>
-              <label style={labelStyle}>Crop Width (px)</label>
+              <label style={labelStyle}>Width (px)</label>
               <input
                 type="number"
                 value={settings.smartCropW}
-                min={100} max={4472}
-                onChange={e => onChange({ smartCropW: parseInt(e.target.value) })}
+                min={100} max={10000}
+                onChange={e => {
+                  const v = parseInt(e.target.value);
+                  onChange({ smartCropW: v, extendW: v });
+                }}
                 style={inputStyle}
               />
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--color-mu)', marginTop: '6px', lineHeight: '1.4' }}>
+                crop + extend target
+              </div>
             </div>
             <div style={sgStyle}>
-              <label style={labelStyle}>Crop Height (px)</label>
+              <label style={labelStyle}>Height (px)</label>
               <input
                 type="number"
                 value={settings.smartCropH}
-                min={100} max={4472}
-                onChange={e => onChange({ smartCropH: parseInt(e.target.value) })}
+                min={100} max={10000}
+                onChange={e => {
+                  const v = parseInt(e.target.value);
+                  onChange({ smartCropH: v, extendH: v });
+                }}
                 style={inputStyle}
               />
-            </div>
-            <div style={sgStyle}>
-              <label style={labelStyle}>Extend To Width (px)</label>
-              <input
-                type="number"
-                value={settings.extendW}
-                min={1} max={10000}
-                onChange={e => onChange({ extendW: parseInt(e.target.value) })}
-                style={inputStyle}
-              />
-            </div>
-            <div style={sgStyle}>
-              <label style={labelStyle}>Extend To Height (px)</label>
-              <input
-                type="number"
-                value={settings.extendH}
-                min={1} max={10000}
-                onChange={e => onChange({ extendH: parseInt(e.target.value) })}
-                style={inputStyle}
-              />
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--color-mu)', marginTop: '6px', lineHeight: '1.4' }}>
+                crop + extend target
+              </div>
             </div>
             <div style={sgStyle}>
               <label style={labelStyle}>Image Position</label>
