@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg:   #050508;
+  --color-s1:   #0c0c12;
+  --color-s2:   #111118;
+  --color-s3:   #17171f;
+  --color-bd:   #1e1e2a;
+  --color-bd2:  #2a2a38;
+  --color-bd3:  #363650;
+
+  --color-a:    #c6f135;
+  --color-a2:   #6c4dff;
+  --color-a3:   #00d4a8;
+  --color-a4:   #ff5e5e;
+  --color-a5:   #ffa952;
+
+  --color-tx:   #e2e4f0;
+  --color-tx2:  #9496b0;
+  --color-mu:   #44445a;
+
+  --font-syne:  'Syne', sans-serif;
+  --font-mono:  'JetBrains Mono', monospace;
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-tx);
+  font-family: var(--font-syne);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ─── Top glow line ─── */
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--color-a2) 30%, var(--color-a3) 70%, transparent 100%);
+  opacity: .6; z-index: 100;
+}
+
+/* ─── Noise overlay ─── */
+.noise {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  opacity: .025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ─── Grid background ─── */
+.grid-bg {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(var(--color-bd) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-bd) 1px, transparent 1px);
+  background-size: 52px 52px;
+  opacity: .25;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+
+/* ─── Animations ─── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .3; }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(198,241,53,.3); }
+  50%       { box-shadow: 0 0 0 8px rgba(198,241,53,0);  }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Pipe step states ─── */
+.pt-icon-running {
+  border-color: var(--color-a) !important;
+  background: rgba(198,241,53,.08) !important;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+.pt-icon-done {
+  border-color: var(--color-a3) !important;
+  background: rgba(0,212,168,.1) !important;
+}
+.pt-line-done {
+  background: var(--color-a3) !important;
+}
+
+/* ─── Queue item animation ─── */
+.qi-enter { animation: fadeUp .2s ease; }
+
+/* ─── Result card animation ─── */
+.rc-enter { animation: fadeUp .3s ease; }
+
+/* ─── Range input accent ─── */
+input[type=range] { accent-color: var(--color-a); cursor: pointer; }
+
+/* ─── Select arrow ─── */
+select { -webkit-appearance: none; appearance: none; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-bd3); border-radius: 2px; }
+
+/* ─── Checkerboard for transparent images ─── */
+.checker-bg {
+  background: repeating-conic-gradient(#14141e 0% 25%, #0c0c14 0% 50%) 0 0 / 18px 18px;
+}
