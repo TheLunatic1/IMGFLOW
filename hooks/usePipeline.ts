@@ -271,8 +271,7 @@ export function usePipeline() {
       files[r.name] = new Uint8Array(buf);
     }
     const zipped = zipSync(files);
-    const blob = new Blob([zipped], { type: 'application/zip' });
-    const a = document.createElement('a');
+    const blob = new Blob([zipped.buffer as ArrayBuffer], { type: 'application/zip' });    const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'shopify_pipeline.zip';
     a.click();
