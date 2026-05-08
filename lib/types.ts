@@ -1,4 +1,4 @@
-export type FlowType = 1 | 2 | 3 | 4;
+export type FlowType = 1 | 2 | 3;
 export type UpscaleMethod = 'lanczos' | 'bicubic';
 export type PresetType = 'quick' | 'balanced' | 'max';
 export type QueueStatus = 'waiting' | 'processing' | 'done' | 'error';
@@ -52,8 +52,7 @@ export interface PipelineSettings extends PipelineConfig {
 export const FLOW_STEPS: Record<number, [string, string][]> = {
   1: [['🔎', 'Lanczos\nUpscale'], ['📐', 'Shopify\nResize'], ['🌐', 'WebP\nEncode']],
   2: [['✂️', 'AI BG\nRemove'], ['🔎', 'Lanczos\nUpscale'], ['📐', 'Shopify\nResize'], ['🌐', 'WebP\nEncode']],
-  3: [['✂', 'Smart\nCrop'], ['🌐', 'WebP\nEncode']],
-  4: [['↔', 'Extend\nCanvas'], ['🎨', 'Fill\nEdges'], ['🌐', 'WebP\nEncode']],
+  3: [['✂', 'Smart\nCrop'], ['↔', 'Extend\nCanvas'], ['🎨', 'Fill\nEdges'], ['🌐', 'WebP\nEncode']],
 };
 
 export const DEFAULT_SETTINGS: PipelineSettings = {

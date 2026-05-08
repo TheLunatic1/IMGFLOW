@@ -215,11 +215,31 @@ export default function SettingsGrid({ flow, settings, onChange, onPreset }: Set
           </>
         )}
 
-        {/* Image Extender — flow 4 only */}
-        {flow === 4 && (
+        {/* Reframe (Smart Crop + Extend) — flow 3 only */}
+        {flow === 3 && (
           <>
             <div style={sgStyle}>
-              <label style={labelStyle}>Target Width (px)</label>
+              <label style={labelStyle}>Crop Width (px)</label>
+              <input
+                type="number"
+                value={settings.smartCropW}
+                min={100} max={4472}
+                onChange={e => onChange({ smartCropW: parseInt(e.target.value) })}
+                style={inputStyle}
+              />
+            </div>
+            <div style={sgStyle}>
+              <label style={labelStyle}>Crop Height (px)</label>
+              <input
+                type="number"
+                value={settings.smartCropH}
+                min={100} max={4472}
+                onChange={e => onChange({ smartCropH: parseInt(e.target.value) })}
+                style={inputStyle}
+              />
+            </div>
+            <div style={sgStyle}>
+              <label style={labelStyle}>Extend To Width (px)</label>
               <input
                 type="number"
                 value={settings.extendW}
@@ -229,7 +249,7 @@ export default function SettingsGrid({ flow, settings, onChange, onPreset }: Set
               />
             </div>
             <div style={sgStyle}>
-              <label style={labelStyle}>Target Height (px)</label>
+              <label style={labelStyle}>Extend To Height (px)</label>
               <input
                 type="number"
                 value={settings.extendH}
@@ -271,43 +291,17 @@ export default function SettingsGrid({ flow, settings, onChange, onPreset }: Set
             </div>
           </>
         )}
-
-        {/* Smart Crop — flow 3 only */}
-        {flow === 3 && (
-          <>
-            <div style={sgStyle}>
-              <label style={labelStyle}>Target Width (px)</label>
-              <input
-                type="number"
-                value={settings.smartCropW}
-                min={100} max={4472}
-                onChange={e => onChange({ smartCropW: parseInt(e.target.value) })}
-                style={inputStyle}
-              />
-            </div>
-            <div style={sgStyle}>
-              <label style={labelStyle}>Target Height (px)</label>
-              <input
-                type="number"
-                value={settings.smartCropH}
-                min={100} max={4472}
-                onChange={e => onChange({ smartCropH: parseInt(e.target.value) })}
-                style={inputStyle}
-              />
-            </div>
-          </>
-        )}
       </div>
 
-      {/* Extend Info Banner — flow 4 only */}
-      {flow === 4 && (
+      {/* Reframe Info Banner — flow 3 only */}
+      {flow === 3 && (
         <div
           style={{
             display: 'flex',
             gap: '14px',
             alignItems: 'flex-start',
-            background: 'rgba(255,169,82,.04)',
-            border: '1px solid rgba(255,169,82,.2)',
+            background: 'rgba(108,77,255,.04)',
+            border: '1px solid rgba(108,77,255,.2)',
             borderRadius: '10px',
             padding: '16px 18px',
             marginBottom: '16px',
@@ -315,28 +309,26 @@ export default function SettingsGrid({ flow, settings, onChange, onPreset }: Set
         >
           <div
             style={{
-              fontSize: '22px',
-              color: 'var(--color-a5)',
+              fontSize: '18px',
+              color: 'var(--color-a2)',
               width: '36px',
               height: '36px',
-              background: 'rgba(255,169,82,.1)',
+              background: 'rgba(108,77,255,.1)',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
-              fontFamily: 'var(--font-syne)',
-              fontWeight: 800,
             }}
           >
-            ↔
+            ✂↔
           </div>
           <div>
-            <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-a5)', marginBottom: '4px' }}>
-              Smart Canvas Extension
+            <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-a2)', marginBottom: '4px' }}>
+              Reframe Pipeline
             </div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--color-tx2)', lineHeight: '1.6' }}>
-              The original image stays untouched & unstretched. Empty areas are filled with sampled edge colors that blend seamlessly — no AI required.
+              Smart-crops to your target crop size, then extends the canvas to your final dimensions — filling the new space with seamlessly blended edge colors. No AI required.
             </div>
           </div>
         </div>

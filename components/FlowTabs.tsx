@@ -30,23 +30,13 @@ const TABS = [
   },
   {
     n: 3 as FlowType,
-    badge: 'crop',
+    badge: 'reframe',
     badgeStyle: { background: 'rgba(108,77,255,.07)', color: 'var(--color-a2)', borderColor: 'rgba(108,77,255,.2)' },
-    name: 'Smart Crop',
-    chain: ['Crop', '→', 'Upscale', '→', 'WebP'],
+    name: 'Reframe',
+    chain: ['Smart Crop', '→', 'Extend', '→', 'WebP'],
     accentVar: '--color-a2',
     glowRgba: 'rgba(108,77,255,.08)',
     shadowRgba: 'rgba(108,77,255,.08)',
-  },
-  {
-    n: 4 as FlowType,
-    badge: 'new',
-    badgeStyle: { background: 'rgba(255,169,82,.12)', color: 'var(--color-a5)', borderColor: 'rgba(255,169,82,.3)' },
-    name: 'Image Extender',
-    chain: ['Extend Canvas', '→', 'Fill Edges', '→', 'WebP'],
-    accentVar: '--color-a5',
-    glowRgba: 'rgba(255,169,82,.08)',
-    shadowRgba: 'rgba(255,169,82,.08)',
   },
 ];
 
@@ -55,7 +45,7 @@ export default function FlowTabs({ flow, onSelect }: FlowTabsProps) {
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
+        gridTemplateColumns: 'repeat(3, 1fr)',
         gap: '8px',
         marginBottom: '20px',
       }}

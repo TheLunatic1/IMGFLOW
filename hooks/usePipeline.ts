@@ -163,7 +163,7 @@ export function usePipeline() {
     dispatch({ type: 'CLEAR_LOGS' });
     dispatch({ type: 'SET_RUNNING', value: true });
 
-    const stepCounts: Record<number, number> = { 1: 3, 2: 4, 3: 2, 4: 3 };
+    const stepCounts: Record<number, number> = { 1: 3, 2: 4, 3: 4 };
     const total = stepCounts[flow];
 
     const setPipeStep = (i: number, s: 'idle' | 'running' | 'done') => {
@@ -180,26 +180,28 @@ export function usePipeline() {
         let canvas = await loadCanvas(item.file);
         let step = 0;
 
-        if (flow === 4) {
-          setPipeStep(step, 'running');
-          log('  → extending canvas...', 'warn');
-          canvas = extendCanvas(canvas, settings.extendW, settings.extendH, settings.extendAlign);
-          setPipeStep(step, 'done'); step++;
-          dispatch({ type: 'UPDATE_ITEM', id: item.id, patch: { progress: Math.round(step / total * 100) } });
-
-          setPipeStep(step, 'running');
-          log('  → filling edges...', 'warn');
-          canvas = fillExtendedEdges(canvas as any, settings.extendW, settings.extendH, settings.extendAlign, settings.extendBlend) as HTMLCanvasElement;
-          setPipeStep(step, 'done'); step++;
-          dispatch({ type: 'UPDATE_ITEM', id: item.id, patch: { progress: Math.round(step / total * 100) } });
-
-        } else if (flow === 3) {
+        if (flow === 3) {
+          // Step 1: Smart Crop
           setPipeStep(step, 'running');
           log(`  → smart crop to ${settings.smartCropW}×${settings.smartCropH}...`, 'warn');
           canvas = smartCrop(canvas, settings);
           setPipeStep(step, 'done'); step++;
           dispatch({ type: 'UPDATE_ITEM', id: item.id, patch: { progress: Math.round(step / total * 100) } });
           log(`  ✓ cropped → ${canvas.width}×${canvas.height}`, 'ok');
+
+          // Step 2: Extend Canvas
+          setPipeStep(step, 'running');
+          log('  → extending canvas...', 'warn');
+          canvas = extendCanvas(canvas, settings.extendW, settings.extendH, settings.extendAlign);
+          setPipeStep(step, 'done'); step++;
+          dispatch({ type: 'UPDATE_ITEM', id: item.id, patch: { progress: Math.round(step / total * 100) } });
+
+          // Step 3: Fill Edges
+          setPipeStep(step, 'running');
+          log('  → filling edges...', 'warn');
+          canvas = fillExtendedEdges(canvas as any, settings.extendW, settings.extendH, settings.extendAlign, settings.extendBlend) as HTMLCanvasElement;
+          setPipeStep(step, 'done'); step++;
+          dispatch({ type: 'UPDATE_ITEM', id: item.id, patch: { progress: Math.round(step / total * 100) } });
 
         } else {
           if (flow === 2) {
@@ -230,7 +232,7 @@ export function usePipeline() {
         setPipeStep(step, 'done');
         dispatch({ type: 'UPDATE_ITEM', id: item.id, patch: { progress: 100 } });
 
-        const prefix = flow === 4 ? 'extended' : flow === 3 ? 'smartcrop' : flow === 2 ? 'nobg' : 'shopify';
+        const prefix = flow === 3 ? 'reframe' : flow === 2 ? 'nobg' : 'shopify';
         const base = item.name.replace(/\.[^.]+$/, '');
         const result: ResultItem = {
           id: item.id,
