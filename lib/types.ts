@@ -2,6 +2,7 @@ export type FlowType = 1 | 2 | 3;
 export type UpscaleMethod = 'lanczos' | 'bicubic';
 export type PresetType = 'quick' | 'balanced' | 'max';
 export type QueueStatus = 'waiting' | 'processing' | 'done' | 'error';
+export type BgMode = 'pixel' | 'transparent';
 export type ExtendAlign =
   | 'center' | 'top-left' | 'top-center' | 'top-right'
   | 'middle-left' | 'middle-right'
@@ -42,6 +43,8 @@ export interface PipelineConfig {
   extendH: number;
   extendAlign: ExtendAlign;
   extendBlend: number;
+  bgMode: BgMode;
+  bgColor: string;
   renamePattern: string;
 }
 
@@ -70,5 +73,7 @@ export const DEFAULT_SETTINGS: PipelineSettings = {
   extendH: 1200,
   extendAlign: 'center',
   extendBlend: 24,
+  bgMode: 'pixel',
+  bgColor: '#ffffff',
   renamePattern: '',
 };

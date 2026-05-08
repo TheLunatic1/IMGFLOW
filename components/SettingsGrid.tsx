@@ -1,6 +1,6 @@
 'use client';
 
-import type { FlowType, PipelineSettings, PresetType, ExtendAlign, UpscaleMethod } from '@/lib/types';
+import type { FlowType, PipelineSettings, PresetType, ExtendAlign, UpscaleMethod, BgMode } from '@/lib/types';
 
 interface SettingsGridProps {
   flow: FlowType;
@@ -280,6 +280,60 @@ export default function SettingsGrid({ flow, settings, onChange, onPreset }: Set
                 onChange={e => onChange({ extendBlend: parseInt(e.target.value) })}
                 style={{ width: '100%' }}
               />
+            </div>
+            <div style={sgStyle}>
+              <label style={labelStyle}>Background Fill</label>
+              <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
+                {(['pixel', 'transparent'] as BgMode[]).map(mode => (
+                  <button
+                    key={mode}
+                    onClick={() => onChange({ bgMode: mode })}
+                    style={{
+                      flex: 1,
+                      padding: '7px 0',
+                      borderRadius: '6px',
+                      border: `1px solid ${settings.bgMode === mode ? 'var(--color-a2)' : 'var(--color-bd)'}`,
+                      background: settings.bgMode === mode ? 'rgba(108,77,255,.1)' : 'var(--color-s2)',
+                      color: settings.bgMode === mode ? 'var(--color-a2)' : 'var(--color-mu)',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '9px',
+                      letterSpacing: '1px',
+                      cursor: 'pointer',
+                      transition: 'all .2s',
+                    }}
+                  >
+                    {mode === 'pixel' ? '🎨 Color' : '◻ Transparent'}
+                  </button>
+                ))}
+              </div>
+              {settings.bgMode === 'pixel' && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="color"
+                    value={settings.bgColor}
+                    onChange={e => onChange({ bgColor: e.target.value })}
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      border: '1px solid var(--color-bd2)',
+                      borderRadius: '6px',
+                      background: 'none',
+                      cursor: 'pointer',
+                      padding: '2px',
+                    }}
+                  />
+                  <input
+                    type="text"
+                    value={settings.bgColor}
+                    maxLength={7}
+                    onChange={e => {
+                      const v = e.target.value;
+                      if (/^#[0-9a-fA-F]{0,6}$/.test(v)) onChange({ bgColor: v });
+                    }}
+                    style={{ ...inputStyle, flex: 1, fontFamily: 'var(--font-mono)', fontSize: '11px' }}
+                  />
+                </div>
+              )}
             </div>
           </>
         )}

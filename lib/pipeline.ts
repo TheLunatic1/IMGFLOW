@@ -211,7 +211,9 @@ export function extendCanvas(
   srcCanvas: HTMLCanvasElement,
   targetW: number,
   targetH: number,
-  align: ExtendAlign
+  align: ExtendAlign,
+  bgMode: 'pixel' | 'transparent' = 'transparent',
+  bgColor: string = '#ffffff'
 ): ExtendedCanvas {
   const W = Math.max(targetW, srcCanvas.width);
   const H = Math.max(targetH, srcCanvas.height);
@@ -224,7 +226,12 @@ export function extendCanvas(
   out._srcH = srcCanvas.height;
   out._ox = ox;
   out._oy = oy;
-  ctx.clearRect(0, 0, W, H);
+  if (bgMode === 'pixel') {
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, W, H);
+  } else {
+    ctx.clearRect(0, 0, W, H);
+  }
   ctx.drawImage(srcCanvas, ox, oy);
   return out;
 }

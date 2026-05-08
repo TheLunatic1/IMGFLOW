@@ -192,14 +192,18 @@ export function usePipeline() {
           // Step 2: Extend Canvas
           setPipeStep(step, 'running');
           log('  → extending canvas...', 'warn');
-          canvas = extendCanvas(canvas, settings.extendW, settings.extendH, settings.extendAlign);
+          canvas = extendCanvas(canvas, settings.extendW, settings.extendH, settings.extendAlign, settings.bgMode, settings.bgColor);
           setPipeStep(step, 'done'); step++;
           dispatch({ type: 'UPDATE_ITEM', id: item.id, patch: { progress: Math.round(step / total * 100) } });
 
-          // Step 3: Fill Edges
+          // Step 3: Fill Edges (pixel mode only)
           setPipeStep(step, 'running');
-          log('  → filling edges...', 'warn');
-          canvas = fillExtendedEdges(canvas as any, settings.extendW, settings.extendH, settings.extendAlign, settings.extendBlend) as HTMLCanvasElement;
+          if (settings.bgMode === 'pixel') {
+            log('  → filling edges...', 'warn');
+            canvas = fillExtendedEdges(canvas as any, settings.extendW, settings.extendH, settings.extendAlign, settings.extendBlend) as HTMLCanvasElement;
+          } else {
+            log('  → transparent background...', 'warn');
+          }
           setPipeStep(step, 'done'); step++;
           dispatch({ type: 'UPDATE_ITEM', id: item.id, patch: { progress: Math.round(step / total * 100) } });
 
