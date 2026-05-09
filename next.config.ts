@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   // Allow the @imgly/background-removal dynamic import from esm.sh
-  // to load WASM assets from its CDN
+  // to load WASM assets from it's CDN
   async headers() {
     return [
       {
