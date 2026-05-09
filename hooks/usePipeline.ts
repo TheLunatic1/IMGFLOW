@@ -1,6 +1,6 @@
 'use client';
 
-import { useReducer, useCallback, useRef } from 'react';
+import { useReducer, useEffect, useCallback, useRef } from 'react';
 import type {
   FlowType, QueueItem, ResultItem, PipelineSettings, PresetType,
 } from '@/lib/types';
@@ -91,6 +91,14 @@ function reducer(state: State, action: Action): State {
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 export function usePipeline() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  // Fetch global count on mount
+  useEffect(() => {
+    fetch('/api/counter')
+      .then(r => r.json())
+      .then(data => { if (data.count) dispatch({ type: 'SET_STATS', count: data.count }); })
+      .catch(() => {});
+  }, []);
   const stateRef = useRef(state);
   stateRef.current = state;
 
@@ -263,9 +271,23 @@ export function usePipeline() {
       dispatch({ type: 'SET_PIPE_STEPS', states: [] });
     }
 
-    dispatch({ type: 'SET_STATS', count: stateRef.current.statsCount + results.length });
+    const localCount = stateRef.current.statsCount + results.length;
+    dispatch({ type: 'SET_STATS', count: localCount });
     dispatch({ type: 'SET_RUNNING', value: false });
     log(`Done. ${results.length} file(s) ready.`, 'ok');
+
+    // Push to global counter
+    if (results.length > 0) {
+      try {
+        const res = await fetch('/api/counter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ n: results.length }),
+        });
+        const data = await res.json();
+        if (data.count) dispatch({ type: 'SET_STATS', count: data.count });
+      } catch { /* non-critical */ }
+    }
   }, [log]);
 
   const downloadAll = useCallback(async (results: ResultItem[]) => {

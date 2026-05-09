@@ -1,7 +1,57 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
+
 interface HeaderProps {
   statsCount: number;
+}
+
+function AnimatedCounter({ value }: { value: number }) {
+  const [display, setDisplay] = useState(value);
+  const [flash, setFlash] = useState(false);
+  const prev = useRef(value);
+
+  useEffect(() => {
+    if (value === prev.current) return;
+    const start = prev.current;
+    const end = value;
+    const diff = end - start;
+    if (diff <= 0) { setDisplay(end); prev.current = end; return; }
+
+    // Animate count up
+    const duration = Math.min(1200, diff * 80);
+    const startTime = performance.now();
+    setFlash(true);
+    setTimeout(() => setFlash(false), 600);
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(start + diff * eased));
+      if (progress < 1) requestAnimationFrame(tick);
+      else prev.current = end;
+    };
+    requestAnimationFrame(tick);
+  }, [value]);
+
+  return (
+    <span
+      style={{
+        display: 'block',
+        fontFamily: 'var(--font-syne)',
+        fontSize: '28px',
+        fontWeight: 800,
+        lineHeight: '1',
+        color: flash ? '#fff' : 'var(--color-a)',
+        transition: 'color 0.3s ease',
+        tabularNums: 'tabular-nums',
+      } as React.CSSProperties}
+    >
+      {display.toLocaleString()}
+    </span>
+  );
 }
 
 export default function Header({ statsCount }: HeaderProps) {
@@ -113,20 +163,30 @@ export default function Header({ statsCount }: HeaderProps) {
           v2.5 PRO
         </div>
 
-        {/* Stats */}
+        {/* Live counter */}
         <div style={{ textAlign: 'right' }}>
-          <span
+          <div
             style={{
-              display: 'block',
-              fontFamily: 'var(--font-syne)',
-              fontSize: '28px',
-              fontWeight: 800,
-              color: 'var(--color-a)',
-              lineHeight: '1',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+              justifyContent: 'flex-end',
+              marginBottom: '4px',
             }}
           >
-            {statsCount}
-          </span>
+            <span
+              style={{
+                width: '5px',
+                height: '5px',
+                borderRadius: '50%',
+                background: '#22c55e',
+                animation: 'blink 1.8s ease-in-out infinite',
+                display: 'inline-block',
+                flexShrink: 0,
+              }}
+            />
+            <AnimatedCounter value={statsCount} />
+          </div>
           <span
             style={{
               fontFamily: 'var(--font-mono)',
@@ -135,7 +195,7 @@ export default function Header({ statsCount }: HeaderProps) {
               letterSpacing: '2px',
             }}
           >
-            processed
+            images processed
           </span>
         </div>
       </div>
