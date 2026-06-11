@@ -350,7 +350,7 @@ export async function removeBackgroundAI(
 ): Promise<HTMLCanvasElement> {
   if (!imglyRemoveBackground) {
     onLog?.('loading AI model (first run only)...');
-    const mod = await (new Function('u', 'return import(u)'))('https://esm.sh/@imgly/background-removal@1.7.0');
+    const mod = await (new Function('u', 'return import(u)'))('https://esm.sh/@imgly/background-removal'); // Tested version: @1.7.0
     imglyRemoveBackground = mod.default || mod.removeBackground;
   }
 
